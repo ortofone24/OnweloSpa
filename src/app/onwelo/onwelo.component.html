@@ -1,0 +1,135 @@
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-3">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Voters</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Has Voted</th>
+          </tr>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>V</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Lary</td>
+            <td>X</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-lg-2"></div>
+    <div class="col-lg-3">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Candidates</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Votes</th>
+          </tr>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>JacobSvenma</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Max</td>
+            <td>3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-lg-1"></div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8">
+      <form [formGroup]="addPerson" (ngSubmit)="createPerson()" class="row gy-2 gx-3 align-items-center">
+        <div class="col-auto">
+          <label class="visually-hidden" for="autoSizingInput">Name</label>
+          <input formControlName="username" type="text" class="form-control" id="autoSizingInput" placeholder="Jane Doe">
+        </div>
+        <div *ngIf="username.touched &&  username.errors?.['required']" class="alert alert-danger"> This field is requiered </div>
+        <div class="col-auto">
+          <label class="visually-hidden" for="autoSizingSelect">Preference</label>
+          <select class="form-select" id="autoSizingSelect" (change)="isVoterOrCandidate($event) " formControlName="isVoter">
+            <option value="" hidden selected>Choose</option>
+            <option value="1">Voter</option>
+            <option value="2">Candidate</option>
+          </select>
+        </div>
+        <div *ngIf="isVoter.touched && isVoter.errors?.['required']" class="alert alert-danger"> You must choose some option </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-2"></div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-lg-2"></div>
+
+    <div class="col-lg-8">
+      <h2></h2>
+      <h3>Vote!</h3>
+      <form [formGroup]="voting" (ngSubmit)="addVote()" class="row gy-2 gx-3 align-items-center">
+        <div class="col-auto">
+          <label class="visually-hidden" for="autoSizingSelect">Preference</label>
+          <select class="form-select" id="autoSizingSelect" (change)="chooseVoter($event) " formControlName="voter">
+            <option value="" hidden selected>I am</option>
+            <option value="1">Marcin</option>
+            <option value="2">Hania</option>
+          </select>
+        </div>
+        <div *ngIf="voter.touched && voter.errors?.['required']" class="alert alert-danger"> You must choose some option </div>
+        <div class="col-auto">
+          <label class="visually-hidden" for="autoSizingSelect">Preference</label>
+          <select class="form-select" id="autoSizingSelect" (change)="chooseCandidate($event) " formControlName="candidate">
+            <option value="" hidden selected>I vote for</option>
+            <option value="1">Gosia</option>
+            <option value="2">Hania</option>
+          </select>
+        </div>
+        <div *ngIf="candidate.touched && candidate.errors?.['required']" class="alert alert-danger"> You must choose some option </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-2"></div>
+  </div>
+
+</div>
+
+
+
+
