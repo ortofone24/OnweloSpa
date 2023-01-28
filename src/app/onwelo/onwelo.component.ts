@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { OnweloService } from '../services/onwelo.service';
+import { createPerson } from '../interfaces/interface';
 
 @Component({
   selector: 'app-onwelo',
@@ -11,7 +13,7 @@ export class OnweloComponent implements OnInit {
   addPerson!: FormGroup;
   voting!: FormGroup;
 
-  constructor(private fb: FormBuilder)
+  constructor(private fb: FormBuilder, private apiService: OnweloService)
   {
     this.addPerson = this.fb.group({
       username: ['', [Validators.required]],
@@ -46,7 +48,7 @@ export class OnweloComponent implements OnInit {
   }
 
   get username() {
-    console.log(this.addPerson.get('username'))
+    //console.log(this.addPerson.get('username'))
     return this.addPerson.get('username')!;
   }
 
@@ -64,7 +66,25 @@ export class OnweloComponent implements OnInit {
 
   createPerson() {
     console.log('GosiaHanusia');
-    console.log(this.addPerson);
+
+    //console.log(this.addPerson.value['isVoter']);
+
+    let voter: boolean = false;
+    var getVoter = this.addPerson.value['isVoter'];
+    if (getVoter === '1') {
+      voter = true;
+    }
+
+    let usernameFromForm : string  = this.addPerson.value['username'];
+
+    let data: createPerson = {
+      name: usernameFromForm,
+      isVoter: voter
+      }
+
+    this.apiService.createPerson(data).subscribe(data => {
+      console.log(data)
+    });
     
   }
 
