@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { OnweloService } from '../services/onwelo.service';
-import { createPerson } from '../interfaces/interface';
+import { createPerson, voterHasVoted } from '../interfaces/interface';
 
 @Component({
   selector: 'app-onwelo',
@@ -12,9 +12,11 @@ export class OnweloComponent implements OnInit {
 
   addPerson!: FormGroup;
   voting!: FormGroup;
+  getVoters: any;
+  getCandidates: any;
+  getVotersWhoNotVoted: any;
 
-  constructor(private fb: FormBuilder, private apiService: OnweloService)
-  {
+  constructor(private fb: FormBuilder, private apiService: OnweloService) {
     this.addPerson = this.fb.group({
       username: ['', [Validators.required]],
       isVoter: ['', [Validators.required]]
@@ -23,8 +25,27 @@ export class OnweloComponent implements OnInit {
     this.voting = this.fb.group({
       voter: ['', [Validators.required]],
       candidate: ['', [Validators.required]]
-     })
+    })
+
+    this.apiService.getAllVoters().subscribe(data => {
+      //console.log(data)
+      this.getVoters = data;
+      //console.log(this.getVoters);
+    }, error => console.error(error))
+
+    this.apiService.getAllCandidates().subscribe(data => {
+      //console.log(data)
+      this.getCandidates = data;
+      //console.log(this.getCandidates);
+    }, error => console.error(error))
+
+    this.apiService.getAllVotersWhoNotVoted().subscribe(data => {
+      this.getVotersWhoNotVoted = data;
+      console.log(this.getVotersWhoNotVoted);
+    }, error => console.error(error))
   }
+
+  //to think on change itd
   ngOnInit() {
       
   }
@@ -65,7 +86,7 @@ export class OnweloComponent implements OnInit {
   }
 
   createPerson() {
-    console.log('GosiaHanusia');
+    //console.log('GosiaHanusia');
 
     //console.log(this.addPerson.value['isVoter']);
 
@@ -80,17 +101,35 @@ export class OnweloComponent implements OnInit {
     let data: createPerson = {
       name: usernameFromForm,
       isVoter: voter
-      }
+    }
 
-    this.apiService.createPerson(data).subscribe(data => {
+    this.apiService.postCreatePerson(data).subscribe(data => {
       console.log(data)
     });
-    
   }
 
   addVote() {
-    console.log('zxczxczx');
-    console.log(this.voting.value);
-  }
 
+    let nameVoter: string = this.voting.value['voter'];
+    let nameCandidate: string = this.voting.value['candidate'];
+ 
+    //console.log(this.voting.value);
+
+    let dataVoter: voterHasVoted = {
+      name: nameVoter,
+      voted: true
+    }
+
+    //console.log(dataVoter);
+    //console.log(nameCandidate);
+
+    this.apiService.putVoterHasVoted(dataVoter).subscribe(data => {
+      console.log(data)
+    })
+
+    this.apiService.postIncrementVotesByOne(nameCandidate).subscribe(data =>
+    {
+      console.log(data);
+    })
+  }
 }
