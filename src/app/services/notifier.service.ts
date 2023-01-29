@@ -9,8 +9,7 @@ export class NotifierService {
   constructor(private toastr: ToastrService) { }
 
   showSuccess() {
-    this.toastr.success('Added successfully', 'Voted', { easing: 'ease-in', easeTime: 1000 }
-    )
+    this.toastr.success('Added successfully', 'Voted', { easing: 'ease-in', easeTime: 1000 })
   }
 
   showError() {

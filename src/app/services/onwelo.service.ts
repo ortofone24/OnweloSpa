@@ -41,5 +41,4 @@ export class OnweloService {
   putVoterHasVoted(data: voterHasVoted): Observable<any> {
     return this.http.put(this.voterHasVotedPath, data, { responseType: 'text' });
   }
-
 }

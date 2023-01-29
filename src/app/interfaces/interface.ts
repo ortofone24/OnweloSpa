@@ -17,7 +17,6 @@ export interface getAllVoters {
   voted: boolean;
 }
 
-
 export interface voterHasVoted {
   name: string;
   voted: boolean;
