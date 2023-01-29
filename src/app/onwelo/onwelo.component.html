@@ -66,7 +66,7 @@
         </div>
         <div *ngIf="isVoter.touched && isVoter.errors?.['required']" class="alert alert-danger"> You must choose some option </div>
         <div class="col-auto">
-          <button type="submit" class="btn btn-dark">Submit</button>
+          <button [disabled]="addPerson.invalid" type="submit" class="btn btn-dark">Submit</button>
         </div>
       </form>
     </div>
@@ -91,7 +91,7 @@
         </div>
         <div *ngIf="candidate.touched && candidate.errors?.['required']" class="alert alert-danger"> You must choose some option </div>
         <div class="col-auto">
-          <button type="submit" class="btn btn-dark">Submit</button>
+          <button [disabled]="voting.invalid" type="submit" class="btn btn-dark">Submit</button>
         </div>
       </form>
     </div>

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { OnweloService } from '../services/onwelo.service';
-import { createPerson, voterHasVoted } from '../interfaces/interface';
 import { Router } from '@angular/router';
+import { OnweloService } from '../services/onwelo.service';
+import { NotifierService } from '../services/notifier.service';
+import { createPerson, voterHasVoted } from '../interfaces/interface';
+
 
 @Component({
   selector: 'app-onwelo',
@@ -17,7 +19,7 @@ export class OnweloComponent implements OnInit {
   getCandidates: any;
   getVotersWhoNotVoted: any;
 
-  constructor(private fb: FormBuilder, private apiService: OnweloService) {
+  constructor(private fb: FormBuilder, private apiService: OnweloService, private toast: NotifierService) {
     this.addPerson = this.fb.group({
       username: ['', [Validators.required]],
       isVoter: ['', [Validators.required]]
@@ -29,66 +31,24 @@ export class OnweloComponent implements OnInit {
     })
   }
 
-  //to think on change itd
   ngOnInit() {
     this.apiService.getAllVoters().subscribe(data => {
-      //console.log(data)
       this.getVoters = data;
-      //console.log(this.getVoters);
     }, error => console.error(error))
 
     this.apiService.getAllCandidates().subscribe(data => {
-      //console.log(data)
       this.getCandidates = data;
-      //console.log(this.getCandidates);
     }, error => console.error(error))
 
     this.apiService.getAllVotersWhoNotVoted().subscribe(data => {
       this.getVotersWhoNotVoted = data;
-      console.log(this.getVotersWhoNotVoted);
+      if (this.getVotersWhoNotVoted < 1) {
+        this.toast.showError();
+      }
     }, error => console.error(error))
   }
 
-  isVoterOrCandidate(e: any) {
-    this.isVoter?.setValue(e.target.value, {
-      onlySelf: true,
-      })
-  }
-
-  chooseVoter(e: any) {
-    this.voter?.setValue(e.target.value, {
-      onlySelf: true,
-    })
-  }
-
-  chooseCandidate(e: any) {
-    this.candidate?.setValue(e.target.value, {
-      onlySelf: true,
-    })
-  }
-
-  get username() {
-    //console.log(this.addPerson.get('username'))
-    return this.addPerson.get('username')!;
-  }
-
-  get isVoter() {
-    return this.addPerson.get('isVoter')!;
-  }
-
-  get voter() {
-    return this.voting.get('voter')!;
-  }
-
-  get candidate() {
-    return this.voting.get('candidate')!;
-  }
-
   createPerson() {
-    //console.log('GosiaHanusia');
-
-    //console.log(this.addPerson.value['isVoter']);
-
     let voter: boolean = false;
     var getVoter = this.addPerson.value['isVoter'];
     if (getVoter === '1') {
@@ -106,42 +66,68 @@ export class OnweloComponent implements OnInit {
       console.log(data)
     });
 
+    this.toast.showInfo();
+
     setTimeout(() => {
       this.reloadPage();
-    },2000)
+    },3000)
   }
 
   addVote() {
-
     let nameVoter: string = this.voting.value['voter'];
     let nameCandidate: string = this.voting.value['candidate'];
- 
-    //console.log(this.voting.value);
 
     let dataVoter: voterHasVoted = {
       name: nameVoter,
       voted: true
-    }
+    };
 
-    //console.log(dataVoter);
-    console.log(nameCandidate);
+    this.apiService.putVoterHasVoted(dataVoter).subscribe();
 
-    this.apiService.putVoterHasVoted(dataVoter).subscribe(data => {
-      console.log(data)
-    })
+    this.apiService.postIncrementVotesByOne(nameCandidate).subscribe();
 
-    this.apiService.postIncrementVotesByOne(nameCandidate).subscribe(data =>
-    {
-      console.log(data);
-    })
+    this.toast.showSuccess();
 
     setTimeout(() => {
       this.reloadPage();
-    }, 2000)
+    }, 3000)
   }
 
   reloadPage() {
     window.location.reload();
   }
 
+  get username() {
+    return this.addPerson.get('username')!;
+  }
+
+  get isVoter() {
+    return this.addPerson.get('isVoter')!;
+  }
+
+  get voter() {
+    return this.voting.get('voter')!;
+  }
+
+  get candidate() {
+    return this.voting.get('candidate')!;
+  }
+
+  isVoterOrCandidate(e: any) {
+    this.isVoter?.setValue(e.target.value, {
+      onlySelf: true,
+    })
+  }
+
+  chooseVoter(e: any) {
+    this.voter?.setValue(e.target.value, {
+      onlySelf: true,
+    })
+  }
+
+  chooseCandidate(e: any) {
+    this.candidate?.setValue(e.target.value, {
+      onlySelf: true,
+    })
+  }
 }
