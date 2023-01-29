@@ -34,12 +34,12 @@ export class OnweloService {
     return this.http.post(this.createPersonPath, data);
   }
 
-  postIncrementVotesByOne(name: string): Observable<any> {
-    return this.http.post(this.incrementVotesByOnePath + name, null);
+  postIncrementVotesByOne(name: string) {
+    return this.http.post(this.incrementVotesByOnePath + name, null, { responseType: 'text' });
   }
 
   putVoterHasVoted(data: voterHasVoted): Observable<any> {
-    return this.http.put(this.voterHasVotedPath, data);
+    return this.http.put(this.voterHasVotedPath, data, { responseType: 'text' });
   }
 
 }

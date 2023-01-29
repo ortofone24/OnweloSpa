@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { OnweloService } from '../services/onwelo.service';
 import { createPerson, voterHasVoted } from '../interfaces/interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-onwelo',
@@ -26,7 +27,10 @@ export class OnweloComponent implements OnInit {
       voter: ['', [Validators.required]],
       candidate: ['', [Validators.required]]
     })
+  }
 
+  //to think on change itd
+  ngOnInit() {
     this.apiService.getAllVoters().subscribe(data => {
       //console.log(data)
       this.getVoters = data;
@@ -43,11 +47,6 @@ export class OnweloComponent implements OnInit {
       this.getVotersWhoNotVoted = data;
       console.log(this.getVotersWhoNotVoted);
     }, error => console.error(error))
-  }
-
-  //to think on change itd
-  ngOnInit() {
-      
   }
 
   isVoterOrCandidate(e: any) {
@@ -106,6 +105,10 @@ export class OnweloComponent implements OnInit {
     this.apiService.postCreatePerson(data).subscribe(data => {
       console.log(data)
     });
+
+    setTimeout(() => {
+      this.reloadPage();
+    },2000)
   }
 
   addVote() {
@@ -121,7 +124,7 @@ export class OnweloComponent implements OnInit {
     }
 
     //console.log(dataVoter);
-    //console.log(nameCandidate);
+    console.log(nameCandidate);
 
     this.apiService.putVoterHasVoted(dataVoter).subscribe(data => {
       console.log(data)
@@ -131,5 +134,14 @@ export class OnweloComponent implements OnInit {
     {
       console.log(data);
     })
+
+    setTimeout(() => {
+      this.reloadPage();
+    }, 2000)
   }
+
+  reloadPage() {
+    window.location.reload();
+  }
+
 }

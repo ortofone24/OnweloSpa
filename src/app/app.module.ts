@@ -7,11 +7,13 @@ import { AppComponent } from './app.component';
 import { OnweloComponent } from './onwelo/onwelo.component';
 import { OnweloService } from './services/onwelo.service';
 import { HttpClientModule } from '@angular/common/http';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    OnweloComponent
+    OnweloComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
